@@ -16,7 +16,7 @@ Column[] columns = new Column[numcols];
 
 void setup() {
   smooth();
- // size(384, 864);
+  // size(384, 864);
   size(1500, 864);
   //fullScreen();
   // Parameters go inside the parentheses when the object is constructed.
@@ -24,7 +24,7 @@ void setup() {
     columns[i] = new Column(i, color(255, 255, 0), color(50, 100, 50), i*blockwidth, (2*numcols-i)*blockwidth, 0, yOffset*blockheight, yLength*blockheight-1);
     println(columns[i].ypos, columns[i].yflipped, columns[i].yend, columns[i].yflippedend);
   }
-   noLoop();
+  noLoop();
 }
 
 
@@ -47,7 +47,7 @@ void keyPressed() {
   } else if (key == 's') {
     noLoop();
   } else
-  loop();
+    loop();
 }
 
 void parallelogram(float x, float y, float x1, float y1, float x2, float y2) {
@@ -144,6 +144,9 @@ class Column {
     float adjustedHeight = floor(height/blockheight)*blockheight;
     return Y % adjustedHeight;
   }
+  
+  void twotwoblock() {
+    
 
   void leftDisplay() {
     float xpos = Xadjusted(this.xpos, this.ypos);
@@ -159,8 +162,7 @@ class Column {
     }
     strokeWeight(1);
     noFill(); //***temp!
-    //  rect(xpos, ypos, blockwidth, blockheight); //outline 
-  rect(xflipped-blockwidth, yflippedend-blockheight, blockwidth, blockheight); //flipped skeletonqs
+    rect(xflipped-blockwidth, yflippedend-blockheight, blockwidth, blockheight); //flipped skeletons ***temp
     //noStroke();
     if (Zslash) {
       if ((stepnum + index + ((Zslash) ? 1 : 0)) % 2 == 0) {  //cast boolean Zslash to integer
@@ -174,7 +176,7 @@ class Column {
       parallelogram(xpos+blockwidth/2, ypos, blockwidth/2, blockheight/2, 0, blockheight/2); //little     
       parallelogram(xpos, ypos, blockwidth/2, blockheight/2, 0, blockheight/2); //little
       parallelogram(xpos+blockwidth/2, ypos+blockheight, blockwidth/2, blockheight/2, 0, blockheight/2); //background
-      line(xflipped, yflippedend, xflipped-blockwidth, yflippedend-blockheight);
+      line(xflipped, yflippedend, xflipped-blockwidth, yflippedend-blockheight);  //flipped skeletons ***temp
       if ((stepnum + index + ((Zslash) ? 1 : 0)) % 2 == 0) {  //cast boolean Zslash to integer
         fill(BG);  
         stroke(FG);
@@ -207,10 +209,10 @@ class Column {
       parallelogram(xpos, ypos+blockheight/2, blockwidth/2, -blockheight/2, 0, blockheight/2); //little         
       line(xflipped-blockwidth, yflippedend, xflipped, yflippedend-blockheight);
     }
-    noFill();
+    // noFill();
     // rect(xpos, ypos, blockwidth, blockheight); //outline 
     fill(FG);
-    //textSize(24);  
+    textSize(24);  
     //textAlign(LEFT, BOTTOM);
     //text(str(twist), xpos, ypos+blockheight);
     //textAlign(RIGHT, BOTTOM);
