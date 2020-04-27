@@ -3,25 +3,27 @@
 int blockwidth = 48;
 int blockheight = 72;
 
-int numcols = 8;
+int numcols = 4;
 int radius = 0;
 int maxtwist = 4;
 
-int yOffset = 0;
+int yOffset = 2;
 
-int yLength = 10;
+int yLength = 32;
 
 Column[] columns = new Column[numcols];
 
 
 void setup() {
+
   smooth();
   // size(384, 864);
-  size(2000, 864);
+  size(2000, 1000);
   //fullScreen();
+  imageMode(CORNERS);
   // Parameters go inside the parentheses when the object is constructed.
   for (int i = 0; i < numcols; i = i+1) {
-    columns[i] = new Column(i, color(255, 255, 0), color(50, 100, 50), i*blockwidth, (2*numcols-i)*blockwidth, 0, yOffset*blockheight, yLength*blockheight-1);
+    columns[i] = new Column(i, color(255, 255, 0), color(50, 100, 50), i*blockwidth, (2*numcols-i)*blockwidth, 0, yOffset*blockheight, (yLength+0.5)*blockheight-1);
     println(columns[i].ypos, columns[i].yflipped, columns[i].yend, columns[i].yflippedend);
   }
   noLoop();
@@ -33,7 +35,7 @@ void draw() {
     columns[i].setTwist();
     columns[i].step();
     println(columns[i].ypos, columns[i].yflipped, columns[i].yend, columns[i].yflippedend);
-    if (columns[i].ypos < columns[i].yend) {     
+    if (columns[i].ypos < columns[i].yend-blockheight) {     
       columns[i].leftDisplay();
       columns[i].rightDisplay();
     } else
@@ -41,7 +43,7 @@ void draw() {
       noLoop();
     }
   }
-  // noLoop();
+  noLoop();
 }
 
 void keyPressed() {
@@ -99,6 +101,7 @@ class Column {
 
   float threshhold(int twistVal) {
     return 0.5-(0.5/maxtwist)*twistVal;
+    // return 0;
   }
 
   int nbhdTwist(int radiusVal) {
@@ -123,29 +126,22 @@ class Column {
 
   void step() {
     ypos = ypos + blockheight;
-    //if (ypos > height-blockheight) { // wrap to next set of columns
-    //  xpos = xpos + (2*numcols+1)*blockwidth;
-    //  ypos = 0;
-    //}
     yflipped = yflipped + blockheight;
-    //if (yflipped > height-blockheight) {  // wrap to next set of columns
-    //  xflipped = xflipped + (2*numcols+1)*blockwidth;
-    //  yflipped = 0;
-    //}
     yend = yend - blockheight;
     yflippedend = yflippedend - blockheight;
     stepnum = stepnum + 1;
+    println(Yadjusted(xpos, ypos), Yadjusted(xpos, yend));
   }
 
 
   float Xadjusted(float X, float Y) {
-    float adjustedHeight = floor(height/blockheight)*blockheight;
+    float adjustedHeight = (floor(height/blockheight)-2)*blockheight;
     return X + floor(Y/adjustedHeight) * (2*numcols+1)*blockwidth;
   }
 
   float Yadjusted(float X, float Y) {
-    float adjustedHeight = floor(height/blockheight)*blockheight;
-    return Y % adjustedHeight;
+    float adjustedHeight = (floor(height/blockheight)-2)*blockheight;
+    return Y % adjustedHeight+1.5*blockheight;
   }
 
   void twotwoblock(float xpos, float ypos, int xdir, int ydir) {
@@ -161,6 +157,8 @@ class Column {
       parallelogram(xpos+xdir*blockwidth/2, ypos+ydir*blockheight/2, xdir*blockwidth/2, ydir*blockheight/2, 0, ydir*blockheight/2); //little 
       parallelogram(xpos+xdir*blockwidth/2, ypos, xdir*blockwidth/2, ydir*blockheight/2, 0, ydir*blockheight/2); //little     
       parallelogram(xpos, ypos, xdir*blockwidth/2, ydir*blockheight/2, 0, ydir*blockheight/2); //little
+      //  noStroke();
+      // fill(255, 0, 0); // testing
       parallelogram(xpos+xdir*blockwidth/2, ypos+ydir*blockheight, xdir*blockwidth/2, ydir*blockheight/2, 0, ydir*blockheight/2); //background
       if ((stepnum + index + ((Zslash) ? 1 : 0)) % 2 == 0) {  //cast boolean Zslash to integer
         fill(BG);  
@@ -170,6 +168,8 @@ class Column {
         stroke(BG);
       }
       parallelogram(xpos, ypos+ydir*blockheight/2, xdir*blockwidth/2, ydir*blockheight/2, 0, ydir*blockheight/2); //little 
+      //    noStroke();  
+      //  fill(255, 0, 0); // testing
       parallelogram(xpos, ypos+ydir*blockheight, xdir*blockwidth/2, ydir*blockheight/2, 0, ydir*blockheight/2); //background
     } else {  //Zslash is false
       if ((stepnum + index + ((Zslash) ? 1 : 0)) % 2 == 0) {  //cast boolean Zslash to integer
@@ -182,7 +182,10 @@ class Column {
       parallelogram(xpos+xdir*blockwidth/2, ypos+ydir*blockheight/2, xdir*blockwidth/2, -ydir*blockheight/2, 0, ydir*blockheight/2); //little 
       parallelogram(xpos, ypos+ydir*blockheight, xdir*blockwidth/2, -ydir*blockheight/2, 0, ydir*blockheight/2); //little 
       parallelogram(xpos+xdir*blockwidth/2, ypos+ydir*blockheight, xdir*blockwidth/2, -ydir*blockheight/2, 0, ydir*blockheight/2); //little 
+      //   noStroke();  
+      // fill(255,0,0); // testing
       parallelogram(xpos+xdir*blockwidth/2, ypos+3*ydir*blockheight/2, xdir*blockwidth/2, -ydir*blockheight/2, 0, ydir*blockheight/2); // background 
+      //  fill(255,0,0); // testing
       parallelogram(xpos, ypos+3*ydir*blockheight/2, xdir*blockwidth/2, -ydir*blockheight/2, 0, ydir*blockheight/2); // background
       if ((stepnum + index + ((Zslash) ? 1 : 0)) % 2 == 0) {  //cast boolean Zslash to integer
         fill(BG);  
@@ -198,10 +201,19 @@ class Column {
   void leftDisplay() {
     float xpos = Xadjusted(this.xpos, this.ypos);
     float ypos = Yadjusted(this.xpos, this.ypos);
+    float yend = Yadjusted(this.xpos, this.yend);
     float xflipped = Xadjusted(this.xflipped, this.yflippedend);
+    float yflipped = Yadjusted(this.xflipped, this.yflipped);
     float yflippedend = Yadjusted(this.xflipped, this.yflippedend);
+    if (this.yend-this.ypos<3*blockheight) {
+      clip(0, 0, width, (ypos+yend)/2);
+    }
     twotwoblock(xpos, ypos, 1, 1);
+    if (this.yend-this.ypos<3*blockheight) {
+      clip(0, (yflipped+yflippedend)/2, width, height);
+    }
     twotwoblock(xflipped, yflippedend, -1, -1);
+    noClip();
     fill(FG);
     textSize(24);  
     //textAlign(LEFT, BOTTOM);
@@ -212,10 +224,19 @@ class Column {
 
   void rightDisplay() {
     float xpos = Xadjusted(this.xpos, this.yend);
+    float ypos = Yadjusted(this.xpos, this.ypos);
     float yend = Yadjusted(this.xpos, this.yend);
     float xflipped = Xadjusted(this.xflipped, this.yflipped);
     float yflipped = Yadjusted(this.xflipped, this.yflipped);
+    float yflippedend = Yadjusted(this.xflipped, this.yflippedend);
+    if (this.yend-this.ypos<3*blockheight) {
+      clip(0, 0, width, (yflipped+yflippedend)/2);
+    }
     twotwoblock(xflipped, yflipped, -1, 1);
+    if (this.yend-this.ypos<3*blockheight) {
+      clip(0, (ypos+yend)/2, width, height);
+    }
     twotwoblock(xpos, yend, 1, -1);
+    noClip();
   }
 }
