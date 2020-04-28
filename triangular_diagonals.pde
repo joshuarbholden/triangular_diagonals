@@ -3,6 +3,8 @@
 int blockwidth = 48;
 int blockheight = 72;
 
+int blockspace = 2;
+
 int numcols = 4;
 int radius = 0;
 int maxtwist = 4;
@@ -23,7 +25,7 @@ void setup() {
   imageMode(CORNERS);
   // Parameters go inside the parentheses when the object is constructed.
   for (int i = 0; i < numcols; i = i+1) {
-    columns[i] = new Column(i, color(255, 255, 0), color(50, 100, 50), i*blockwidth, (2*numcols-i)*blockwidth, 0, yOffset*blockheight, (yLength+0.5)*blockheight-1);
+    columns[i] = new Column(i, color(255, 255, 0), color(50, 100, 50), i*blockspace*blockwidth, (2*numcols-i)*blockspace*blockwidth, 0, yOffset*blockheight, (yLength+0.5)*blockheight-1);
     println(columns[i].ypos, columns[i].yflipped, columns[i].yend, columns[i].yflippedend);
   }
   noLoop();
@@ -138,7 +140,7 @@ class Column {
 
   float Xadjusted(float X, float Y) {
     float adjustedHeight = (floor(height/blockheight)-2)*blockheight;
-    return X + floor(Y/adjustedHeight) * (2*numcols+1)*blockwidth;
+    return X + floor(Y/adjustedHeight) * (2*numcols+1)*blockspace*blockwidth;
   }
 
   float Yadjusted(float X, float Y) {
@@ -211,6 +213,7 @@ class Column {
       clip(0, 0, width, (ypos+yend)/2);
     }
     twotwoblock(xpos, ypos, 1, 1);
+    twotwoblock(xpos+blockwidth, ypos, 1, 1);
     if (this.yend-this.ypos<3*blockheight) {
       clip(0, (yflipped+yflippedend)/2, width, height);
     }
