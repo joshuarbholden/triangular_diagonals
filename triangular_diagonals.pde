@@ -18,7 +18,7 @@ void setup() {
 
   smooth();
   // size(384, 864);
-  size(2000, 1000);
+  size(3000, 2000);
   //fullScreen();
   imageMode(CORNERS);
   // Parameters go inside the parentheses when the object is constructed.
@@ -32,7 +32,9 @@ void setup() {
 
 void draw() {
   for (int i = 0; i < numcols; i = i+1) {
-    columns[i].setTwist();
+    if ((columns[i].stepnum % 2) == 0) {
+      columns[i].setTwist();
+    }
     columns[i].step();
     println(columns[i].ypos, columns[i].yflipped, columns[i].yend, columns[i].yflippedend);
     if (columns[i].ypos < columns[i].yend-blockheight) {     
