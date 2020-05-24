@@ -5,13 +5,13 @@ int blockheight = 72;
 
 int blockspace = 2;
 
-int numcols = 4;
+int numcols = 3;
 int radius = 0;
 int maxtwist = 4;
 
-int yOffset = 2;
+int yOffset = 0;
 
-int yLength = 32;
+int yLength = 24;
 
 Column[] columns = new Column[numcols];
 
@@ -19,8 +19,8 @@ Column[] columns = new Column[numcols];
 void setup() {
 
   smooth();
-  // size(384, 864);
-  size(3000, 2000);
+  //size(384, 864);
+  size(1800, 900);
   //fullScreen();
   imageMode(CORNERS);
   // Parameters go inside the parentheses when the object is constructed.
@@ -148,10 +148,10 @@ class Column {
     return Y % adjustedHeight+1.5*blockheight;
   }
 
-  void twotwoblock(float xpos, float ypos, int xdir, int ydir) {
+  void twotwoblock(float xpos, float ypos, int xdir, int ydir, int shift) {
     strokeWeight(1);
     if (Zslash) {
-      if ((stepnum + index + ((Zslash) ? 1 : 0)) % 2 == 0) {  //cast boolean Zslash to integer
+      if ((stepnum + shift + ((Zslash) ? 1 : 0)) % 2 == 0) {  //cast boolean Zslash to integer
         fill(FG);  
         stroke(BG);
       } else {
@@ -164,7 +164,7 @@ class Column {
       //  noStroke();
       // fill(255, 0, 0); // testing
       parallelogram(xpos+xdir*blockwidth/2, ypos+ydir*blockheight, xdir*blockwidth/2, ydir*blockheight/2, 0, ydir*blockheight/2); //background
-      if ((stepnum + index + ((Zslash) ? 1 : 0)) % 2 == 0) {  //cast boolean Zslash to integer
+      if ((stepnum + shift + ((Zslash) ? 1 : 0)) % 2 == 0) {  //cast boolean Zslash to integer
         fill(BG);  
         stroke(FG);
       } else {
@@ -176,7 +176,7 @@ class Column {
       //  fill(255, 0, 0); // testing
       parallelogram(xpos, ypos+ydir*blockheight, xdir*blockwidth/2, ydir*blockheight/2, 0, ydir*blockheight/2); //background
     } else {  //Zslash is false
-      if ((stepnum + index + ((Zslash) ? 1 : 0)) % 2 == 0) {  //cast boolean Zslash to integer
+      if ((stepnum + shift + ((Zslash) ? 1 : 0)) % 2 == 0) {  //cast boolean Zslash to integer
         fill(FG);  
         stroke(BG);
       } else {
@@ -191,7 +191,7 @@ class Column {
       parallelogram(xpos+xdir*blockwidth/2, ypos+3*ydir*blockheight/2, xdir*blockwidth/2, -ydir*blockheight/2, 0, ydir*blockheight/2); // background 
       //  fill(255,0,0); // testing
       parallelogram(xpos, ypos+3*ydir*blockheight/2, xdir*blockwidth/2, -ydir*blockheight/2, 0, ydir*blockheight/2); // background
-      if ((stepnum + index + ((Zslash) ? 1 : 0)) % 2 == 0) {  //cast boolean Zslash to integer
+      if ((stepnum + shift + ((Zslash) ? 1 : 0)) % 2 == 0) {  //cast boolean Zslash to integer
         fill(BG);  
         stroke(FG);
       } else {
@@ -212,12 +212,13 @@ class Column {
     if (this.yend-this.ypos<3*blockheight) {
       clip(0, 0, width, (ypos+yend)/2);
     }
-    twotwoblock(xpos, ypos, 1, 1);
-    twotwoblock(xpos+blockwidth, ypos, 1, 1);
+    twotwoblock(xpos, ypos, 1, 1, 0);
+    twotwoblock(xpos+blockwidth, ypos, 1, 1, 1);
     if (this.yend-this.ypos<3*blockheight) {
       clip(0, (yflipped+yflippedend)/2, width, height);
     }
-    twotwoblock(xflipped, yflippedend, -1, -1);
+    twotwoblock(xflipped, yflippedend, -1, -1, 0);
+    twotwoblock(xflipped-blockwidth, yflippedend, -1, -1, 1);
     noClip();
     fill(FG);
     textSize(24);  
@@ -237,11 +238,13 @@ class Column {
     if (this.yend-this.ypos<3*blockheight) {
       clip(0, 0, width, (yflipped+yflippedend)/2);
     }
-    twotwoblock(xflipped, yflipped, -1, 1);
+    twotwoblock(xflipped, yflipped, -1, 1, 0);
+    twotwoblock(xflipped-blockwidth, yflipped, -1, 1, 1);
     if (this.yend-this.ypos<3*blockheight) {
       clip(0, (ypos+yend)/2, width, height);
     }
-    twotwoblock(xpos, yend, 1, -1);
+    twotwoblock(xpos, yend, 1, -1, 0);
+    twotwoblock(xpos+blockwidth, yend, 1, -1, 1);
     noClip();
   }
 }
