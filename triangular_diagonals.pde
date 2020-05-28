@@ -20,12 +20,12 @@ void setup() {
 
   smooth();
   //size(384, 864);
-  size(1800, 900);
+  size(2000, 900);
   //fullScreen();
   imageMode(CORNERS);
   // Parameters go inside the parentheses when the object is constructed.
   for (int i = 0; i < numcols; i = i+1) {
-    columns[i] = new Column(i, color(255, 255, 0), color(50, 100, 50), i*blockspace*blockwidth, (2*numcols-i)*blockspace*blockwidth, 0, yOffset*blockheight, (yLength+0.5)*blockheight-1);
+    columns[i] = new Column(i, color(255, 255, 0), color(50, 100, 50), i*blockspace*blockwidth, (2*numcols-i-1)*blockspace*blockwidth, 0, yOffset*blockheight, (yLength+0.5)*blockheight-1);
     println(columns[i].ypos, columns[i].yflipped, columns[i].yend, columns[i].yflippedend);
   }
   noLoop();
@@ -212,13 +212,38 @@ class Column {
     if (this.yend-this.ypos<3*blockheight) {
       clip(0, 0, width, (ypos+yend)/2);
     }
-    twotwoblock(xpos, ypos, 1, 1, 0);
-    twotwoblock(xpos+blockwidth, ypos, 1, 1, 1);
+    //if (index % 2 == 0 ) {  //test coloring
+    //  FG = #000000;
+    //  BG = #FFFFFF;
+    //} else {
+    //  FG = #000000;
+    //  BG = #FFFFFF;
+    //}
+    if ((index + floor(stepnum/2)) % 2 == 0) {  // triangle apex down
+      twotwoblock(xpos, ypos, 1, 1, 0);
+      if (index != numcols-1) { // not right edge
+        twotwoblock(xpos+blockwidth, ypos, 1, 1, 1);
+      }
+      if (index != 0) {  // not left edge
+        twotwoblock(xpos-blockwidth, ypos, 1, 1, 1);
+      }
+    } else { // triangle apex up
+      twotwoblock(xpos, ypos, 1, 1, 0);
+    }
     if (this.yend-this.ypos<3*blockheight) {
       clip(0, (yflipped+yflippedend)/2, width, height);
     }
-    twotwoblock(xflipped, yflippedend, -1, -1, 0);
-    twotwoblock(xflipped-blockwidth, yflippedend, -1, -1, 1);
+    if ((index + floor(stepnum/2)) % 2 == 0) {  // triangle apex down
+      twotwoblock(xflipped, yflippedend, -1, -1, 0);
+      if (index != numcols-1) { // not right edge
+        twotwoblock(xflipped-blockwidth, yflippedend, -1, -1, 1);
+      }
+      if (index != 0) {  // not left edge
+        twotwoblock(xflipped+blockwidth, yflippedend, -1, -1, 1);
+      }
+    } else { // triangle apex up
+      twotwoblock(xflipped, yflippedend, -1, -1, 0);
+    }
     noClip();
     fill(FG);
     textSize(24);  
@@ -238,13 +263,31 @@ class Column {
     if (this.yend-this.ypos<3*blockheight) {
       clip(0, 0, width, (yflipped+yflippedend)/2);
     }
-    twotwoblock(xflipped, yflipped, -1, 1, 0);
-    twotwoblock(xflipped-blockwidth, yflipped, -1, 1, 1);
+    if ((index + floor(stepnum/2)) % 2 == 0) {  // triangle apex down
+      twotwoblock(xflipped, yflipped, -1, 1, 0);
+      if (index != numcols-1) { // not right edge
+        twotwoblock(xflipped-blockwidth, yflipped, -1, 1, 1);
+      }
+      if (index != 0) {  // not left edge
+        twotwoblock(xflipped+blockwidth, yflipped, -1, 1, 1);
+      }
+    } else { // triangle apex up
+      twotwoblock(xflipped, yflipped, -1, 1, 0);
+    }
     if (this.yend-this.ypos<3*blockheight) {
       clip(0, (ypos+yend)/2, width, height);
     }
-    twotwoblock(xpos, yend, 1, -1, 0);
-    twotwoblock(xpos+blockwidth, yend, 1, -1, 1);
+    if ((index + floor(stepnum/2)) % 2 == 0) {  // triangle apex down
+      twotwoblock(xpos, yend, 1, -1, 0);
+      if (index != numcols-1) { // not right edge
+        twotwoblock(xpos+blockwidth, yend, 1, -1, 1);
+      }
+      if (index != 0) {  // not left edge
+        twotwoblock(xpos-blockwidth, yend, 1, -1, 1);
+      }
+    } else { // triangle apex up
+      twotwoblock(xpos, yend, 1, -1, 0);
+    }
     noClip();
   }
 }
