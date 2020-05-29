@@ -7,11 +7,16 @@ int blockspace = 2;
 
 int numcols = 3;
 int radius = 0;
-int maxtwist = 4;
+int maxtwist = 8;
 
 int yOffset = 0;
 
-int yLength = 24;
+int yLength = 12;
+
+int yellow = color(255, 255, 0);
+int green = color(50, 100, 50);
+int white = color(255, 255, 255);
+int black = color(0, 0, 0);
 
 Column[] columns = new Column[numcols];
 
@@ -19,13 +24,13 @@ Column[] columns = new Column[numcols];
 void setup() {
 
   smooth();
-  //size(384, 864);
-  size(2000, 900);
+  size(480, 1152);
+  // size(2000, 900);
   //fullScreen();
   imageMode(CORNERS);
   // Parameters go inside the parentheses when the object is constructed.
   for (int i = 0; i < numcols; i = i+1) {
-    columns[i] = new Column(i, color(255, 255, 0), color(50, 100, 50), i*blockspace*blockwidth, (2*numcols-i-1)*blockspace*blockwidth, 0, yOffset*blockheight, (yLength+0.5)*blockheight-1);
+    columns[i] = new Column(i, (i % 2 == 0) ? yellow : white, (i % 2 == 0) ? green : black, i*blockspace*blockwidth, (2*numcols-i-1)*blockspace*blockwidth, 0, yOffset*blockheight, (yLength+0.5)*blockheight-1);
     println(columns[i].ypos, columns[i].yflipped, columns[i].yend, columns[i].yflippedend);
   }
   noLoop();
