@@ -1,22 +1,25 @@
 // Global parameters //<>// //<>// //<>// //<>//
 
-int blockwidth = 48;
-int blockheight = 72;
+int blockwidth = 24;
+int blockheight = 36;
 
 int blockspace = 2;
 
 int numcols = 3;
 int radius = 0;
-int maxtwist = 8;
+int maxtwist = 4;
 
 int yOffset = 0;
 
-int yLength = 12;
+int yLength = 300;
 
 int yellow = color(255, 255, 0);
 int green = color(50, 100, 50);
 int white = color(255, 255, 255);
 int black = color(0, 0, 0);
+int red = color(255, 0, 0);
+
+int totalabstwist = 0;
 
 Column[] columns = new Column[numcols];
 
@@ -24,13 +27,13 @@ Column[] columns = new Column[numcols];
 void setup() {
 
   smooth();
-  size(480, 1152);
-  // size(2000, 900);
-  //fullScreen();
+  //size(480, 1152);
+  //size(2100, 920);
+  fullScreen();
   imageMode(CORNERS);
   // Parameters go inside the parentheses when the object is constructed.
   for (int i = 0; i < numcols; i = i+1) {
-    columns[i] = new Column(i, (i % 2 == 0) ? yellow : white, (i % 2 == 0) ? green : black, i*blockspace*blockwidth, (2*numcols-i-1)*blockspace*blockwidth, 0, yOffset*blockheight, (yLength+0.5)*blockheight-1);
+    columns[i] = new Column(i, (i % 2 == 0) ? yellow : yellow, (i % 2 == 0) ? green : green, i*blockspace*blockwidth, (2*numcols-i-1)*blockspace*blockwidth, 0, yOffset*blockheight, (yLength+0.5)*blockheight-1);
     println(columns[i].ypos, columns[i].yflipped, columns[i].yend, columns[i].yflippedend);
   }
   noLoop();
@@ -38,6 +41,7 @@ void setup() {
 
 
 void draw() {
+  totalabstwist = 0;
   for (int i = 0; i < numcols; i = i+1) {
     if ((columns[i].stepnum % 2) == 0) {
       columns[i].setTwist();
@@ -131,6 +135,7 @@ class Column {
       Zslash = false;
       twist = twist - 1;
     }
+    totalabstwist = totalabstwist + abs(twist);
   }
 
   void step() {
@@ -250,10 +255,11 @@ class Column {
       twotwoblock(xflipped, yflippedend, -1, -1, 0);
     }
     noClip();
-    fill(FG);
+    fill(black);
+    if (totalabstwist == 0) fill(red);
     textSize(24);  
-    //textAlign(LEFT, BOTTOM);
-    //text(str(twist), xpos, ypos+blockheight);
+    textAlign(LEFT, BOTTOM);
+    if ((index == numcols-1) & (stepnum % 2 == 1)) text(str(totalabstwist) + "," + str(1+stepnum/2), xpos+numcols*2*blockwidth, ypos+2*blockheight);
     //textAlign(RIGHT, BOTTOM);
     //text(str(effectiveTwist), xpos+blockwidth, ypos+blockheight);
   }
