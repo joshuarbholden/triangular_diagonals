@@ -5,19 +5,20 @@ int blockheight = 36;
 
 int blockspace = 2;
 
-int numcols = 3;
+int numcols = 6;
 int radius = 0;
 int maxtwist = 4;
 
 int yOffset = 0;
 
-int yLength = 300;
+int yLength = 24;
+int maxsteps = yLength/2-2;
 
 int yellow = color(255, 255, 0);
 int green = color(50, 100, 50);
 int white = color(255, 255, 255);
 int black = color(0, 0, 0);
-int red = color(255, 0, 0);
+int red = color(200, 0, 0);
 
 int totalabstwist = 0;
 
@@ -27,13 +28,13 @@ Column[] columns = new Column[numcols];
 void setup() {
 
   smooth();
-  //size(480, 1152);
+  size(800, 1152);
   //size(2100, 920);
-  fullScreen();
+  //fullScreen();
   imageMode(CORNERS);
   // Parameters go inside the parentheses when the object is constructed.
   for (int i = 0; i < numcols; i = i+1) {
-    columns[i] = new Column(i, (i % 2 == 0) ? yellow : yellow, (i % 2 == 0) ? green : green, i*blockspace*blockwidth, (2*numcols-i-1)*blockspace*blockwidth, 0, yOffset*blockheight, (yLength+0.5)*blockheight-1);
+    columns[i] = new Column(i, (i % 2 == 0) ? white : white, (i % 2 == 0) ? green : green, i*blockspace*blockwidth, (2*numcols-i-1)*blockspace*blockwidth, 0, yOffset*blockheight, (yLength+0.5)*blockheight-1);
     println(columns[i].ypos, columns[i].yflipped, columns[i].yend, columns[i].yflippedend);
   }
   noLoop();
@@ -50,7 +51,8 @@ void draw() {
     println(columns[i].ypos, columns[i].yflipped, columns[i].yend, columns[i].yflippedend);
     if (columns[i].ypos < columns[i].yend-blockheight) {     
       columns[i].leftDisplay();
-      columns[i].rightDisplay();
+      copy(round(columns[i].xpos), round(columns[i].ypos), blockwidth*2, blockheight, round(columns[i].xpos), round(columns[i].ypos+((yLength)*blockheight/2)), blockwidth*2, blockheight); 
+      //    columns[i].rightDisplay();
     } else
     {
       noLoop();
@@ -117,6 +119,22 @@ class Column {
     // return 0;
   }
 
+  float threshhold2(int twistVal) {
+    return 0.5-0.5*twistVal*maxsteps/(maxtwist*(maxsteps-stepnum)+abs(twistVal)*stepnum);
+    // return 0;
+  }
+
+  float sign(float op) {
+    if (op == 0) {return 0;}
+    else if (op > 0) {return 1;}
+    else {return -1;}
+  }
+
+  float threshhold3(int twistVal) {
+    return 0.5-0.5*twistVal*(maxsteps-stepnum)/(maxsteps*maxtwist)-0.5*sign(twistVal)*stepnum/maxsteps;
+    // return 0;
+  }
+
   int nbhdTwist(int radiusVal) {
     int normTwist =  0;
     for (int i = index - radiusVal; i <= index + radiusVal; i = i+1) {
@@ -127,7 +145,7 @@ class Column {
 
   void setTwist() {
     effectiveTwist = nbhdTwist(radius);
-    if (random(0, 1)<threshhold(effectiveTwist)) {
+    if (random(0, 1)<threshhold3(effectiveTwist)) {
       // if (floor(stepnum)/4 % 2 == 0) {  
       Zslash = true;
       twist = twist + 1;
@@ -259,7 +277,7 @@ class Column {
     if (totalabstwist == 0) fill(red);
     textSize(24);  
     textAlign(LEFT, BOTTOM);
-    if ((index == numcols-1) & (stepnum % 2 == 1)) text(str(totalabstwist) + "," + str(1+stepnum/2), xpos+numcols*2*blockwidth, ypos+2*blockheight);
+    if ((index == numcols-1) & (stepnum % 2 == 1)) text(str(totalabstwist) + "," + str((1+stepnum)/2), xpos+numcols*2*blockwidth, ypos+2*blockheight);
     //textAlign(RIGHT, BOTTOM);
     //text(str(effectiveTwist), xpos+blockwidth, ypos+blockheight);
   }
